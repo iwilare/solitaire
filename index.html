@@ -1,0 +1,52 @@
+<title>MOLEK-SYNTEZ Solitaire</title>
+<body style="margin:0;touch-action:none">
+<canvas>
+<script>
+    let xOffset, yOffset, cardHeight, cardWidth, heightDist, cardSpace, corner;
+    d = document;
+    k = d.body.children[0];
+    a = Array;
+    $ = (_,f)=>_.map(f);
+    L = _=>_.length - 1;
+    resize = () => {
+        k.width  = innerWidth
+        k.height = innerHeight
+
+        cardWidth  = Math.round(Math.max(71, Math.min(innerWidth/(6+7*(11/71)), 71*innerHeight/540)));
+        border     = Math.round(Math.min(2, cardWidth/71));
+
+        fontSize   = Math.round(cardWidth*12/71);
+        cardHeight = Math.round(cardWidth*95/71);
+        cardSpace  = Math.round(cardWidth*11/71);
+        fontLeft   = Math.round(cardWidth*3/71);
+        heightDist = Math.round(cardHeight*16/95);
+
+        yOffset    = Math.round(145*innerHeight/540);
+        xOffset    = Math.round(Math.max(cardSpace, (innerWidth - 6*cardWidth - 5*cardSpace)/2));
+
+        Q.font = `${fontSize}px Monospace`;
+        Z()
+    };
+    W = "#fff";
+    B = "#000";
+    G = "grey";
+    I = J = O = P = N = 0;
+    H = a(6);
+    F = a(6);
+    Q = k.getContext('2d');
+    K = _=>Q.fillStyle = _;
+    A = Math.abs;
+    T = (x,y,b,c)=>$([0, 1, 2, 1, 2], (_,i)=>Q.fillRect(K(i > 2 ? c : b) | x + border * _, y + (z = (2 - i % 3) * border), cardWidth - 2 * border * _, cardHeight - 2 * z));
+    X = i=>xOffset + i * (cardWidth + cardSpace);
+    Y = j=>yOffset + j * heightDist;
+    C = (v,x,y,h)=>Q.fillText(K(h ? B : W, T(x, y, h ? G : W, h ? W : B)) | v, x + fontLeft, y + fontSize);
+    D = $([...a(36)], (_,i)=>i % 9 + 1), $(D, (_,i)=>(D[i] = D[j = Math.random() * ++i | 0], D[j] = _));
+    D = $([...a(6)], i=>D.splice(0, 6));
+    Z = ()=>$(D, (d,i)=>F[T(X(i), yOffset, G, B) | i] ? T(X(i), yOffset, W, "#222") : $(d, (c,j)=>!O || i - I || j < J ? C(c, X(i), yOffset + j * heightDist, H[i] && j == L(d)) : 0), Q.fillRect(K(B) | 0, 0, innerWidth, innerHeight)) | O && $(D[I].slice(J), (c,j)=>C(c, N.x - O, N.y - P + j * heightDist, H[I] && j == L(D[I]) - J));
+    d.onpointerdown = ({x, y})=>$(D, (d,i)=>$(d, (_,j)=>!F[i] && A(X(i) + cardWidth / 2 - x) < cardWidth / 2 && Y(j) < y && y < Y(j) + (j - L(d) ? heightDist : cardHeight) && !d.slice(j + 1).some((_,i)=>_ + 1 - d[j + i]) && (I = i, J = j, O = x - X(I), P = y - Y(J))));
+    d.onpointerup   = _=>$(D, (d,i)=>!F[i] && A(N.x - O - X(i)) < cardWidth / 2 && A(N.y - P - Y(A(L(d) + 1) - 1)) < cardHeight && I - i && !H[i] && !F[i] && (D[i] == 0 || D[i][L(D[i])] - 1 == D[I][J] || J == L(D[I]) && !H[I] && (H[i] = 1)) && (D[i].push(...D[I].splice(J)), H[I] = 0, D[i] == "9,8,7,6,5,4,3,2,1" && (F[i] = 1))) | Z(O = 0);
+    d.onpointermove = _=>O&&Z(N = _);
+    window.onresize = resize;
+    resize();
+    Z()
+</script>
